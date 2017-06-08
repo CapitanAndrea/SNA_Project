@@ -15,20 +15,23 @@ def req_flights(iata):
 	#send the request
 	gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
 	routes=urllib2.urlopen('https://iatacodes.org/api/v6/routes?departure='+iata+'&api_key=7a6ff549-3dcc-45ad-9c10-37bd07b0b411', context=gcontext).read()
+	jdata=json.loads(routes)
+	if jdata.has_key('error'):
+		time.sleep(60)
+		return req_flights(iata)
 	#store the result in a file
 	out_file = open("pages/"+iata,"w")
 	out_file.write(beautify(routes))
 	out_file.close()
 	#return the string itself
-	return routes
+	return jdata
 
 #parse the route response from the web service, eliminating duplicates
-def parse_routes(routes_json):
+def parse_routes(routes_object):
 	flights={}
 	edges={}
 	#transform the json into a python object
-	jdata=json.loads(routes_json)
-	response=jdata['response']
+	response=routes_object['response']
 	#retrieve all the routes
 	for i in range(len(response)):
 		flight=response[i]
@@ -50,7 +53,7 @@ out_file_id=open("graph_id", "w")
 out_file_id.write("# source_id destination_id weight\n")
 num=0
 #while the queue is not empty
-while not airports_queue.full():
+while not airports_queue.empty():
 	num=num+1
 	#get the next airport id, and ask for its routes
 	airport_code=airports_queue.get()
