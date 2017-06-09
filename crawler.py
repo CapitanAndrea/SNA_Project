@@ -122,9 +122,9 @@ if not os.path.exists('pages'):
     os.makedirs('pages')
 
 page_map={}
-page_map['Tamas_Vicsek']=0
+page_map['barabasi']=0
 page_queue=Queue.Queue()
-page_queue.put('Tamas_Vicsek')
+page_queue.put('barabasi')
 
 out_file = open("graph","w")
 out_file_id=open("graph_id", "w")
