@@ -7,6 +7,8 @@ import time
 import json
 import Queue
 import os
+import operator
+import networkx as nx
 
 #indent a json string to be more human readable
 def beautify(json_string):
@@ -17,7 +19,7 @@ def req_page(page_name,duplicate):
 	time.sleep(1)
 	#send the request
 	
-	#gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
+	gcontext = ssl.SSLContext(ssl.PROTOCOL_TLSv1)
 
 	#error for # in page_name -- example: John_Henry_Patterson_(NCR_owner)#Pioneering_business_practices		
 	if page_name.find('#') != -1 : 
@@ -26,8 +28,8 @@ def req_page(page_name,duplicate):
 	page_utf=page_name.encode('utf-8', 'replace')
 	print page_utf
 	
-	page=urllib2.urlopen('https://en.wikipedia.org/w/api.php?action=query&titles='+page_utf+'&prop=revisions&rvprop=content&format=json').read()
-	#page=urllib2.urlopen('https://en.wikipedia.org/w/api.php?action=query&titles='+page_utf+'&prop=revisions&rvprop=content&format=json', context=gcontext).read()
+	#page=urllib2.urlopen('https://en.wikipedia.org/w/api.php?action=query&titles='+page_utf+'&prop=revisions&rvprop=content&format=json').read()
+	page=urllib2.urlopen('https://en.wikipedia.org/w/api.php?action=query&titles='+page_utf+'&prop=revisions&rvprop=content&format=json', context=gcontext).read()
 	
 	jdata=json.loads(page)
 	
@@ -111,7 +113,6 @@ num=0
 
 #while the queue is not empty
 while not page_queue.empty():
-	num=num+1
 	page_name=page_queue.get() 
 	#request page	
 	page_obj=req_page(page_name,0)
@@ -124,13 +125,21 @@ while not page_queue.empty():
 		if not page_map.has_key(j[0]):
 			page_map[j[0]]=len(page_map)
 			page_queue.put(j[0])
-		out_file_id.write(str(page_map[page_name])+"\t"+str(page_map[j[0]])+"\t"+str(j[1])+"\n")
+		if page_map[j[0]]<6001: out_file_id.write(str(page_map[page_name])+"\t"+str(page_map[j[0]])+"\n")
 	print(str(num))
-	if num>6000: break
+	num=num+1
+	if num>10: break
 out_file.close()
 out_file_id.close()
 
 #also write to file the dictionary
 out_file = open("pages/pages","w")
-out_file.write(str(page_map))
+out_file.write(str(page_map)+'\n')
 out_file.close()
+
+g=nx.read_edgelist('graph_id', create_using=nx.DiGraph())
+outdegree_distribution=g.out_degree().items()
+for entry in outdegree_distribution:
+	if entry[1]==0:
+		g.remove_node(entry[0])
+nx.write_edgelist(g, 'graph_refined', data=False, delimiter='\t')

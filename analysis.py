@@ -1,5 +1,5 @@
 import networkx as nx
-
+import operator
 
 
 g=nx.read_weighted_edgelist('graph6000', create_using=nx.DiGraph())
@@ -50,10 +50,19 @@ print 'there are ' + str(nx.number_weakly_connected_components(g)) + ' weakly co
 #for i in nx.weakly_connected_components(g):
 #	print str(len(i))
 	
-#path analysis TODO: finire
-print 'the diameter is ' + str(nx.diameter(ung))
-print 'the average shortest path is ' + str(nx.average_shortest_path_length(ung))
+#path analysis
+#print 'the diameter is ' + str(nx.diameter(ung))
+#print 'the average shortest path is ' + str(nx.average_shortest_path_length(ung))
 
 #clustering coefficient, density analysis
-print 'the density is ' + str(nx.density(g))
-print 'the average clustering is ' + str(nx.average_clustering(ung))
+#print 'the density is ' + str(nx.density(g))
+#print 'the average clustering is ' + str(nx.average_clustering(ung))
+
+#centrality analysis
+centrality=nx.betweenness_centrality(g, normalized=True)
+sorted_centrality=sorted(centrality.items(), key=operator.itemgetter(1))
+print 'top betweenness centrality: ' + str(sorted_centrality[len(sorted_centrality)-1])
+
+centrality=nx.closeness_centrality(g, normalized=True)
+sorted_centrality=sorted(centrality.items(), key=operator.itemgetter(1))
+print 'top closeness centrality: ' + str(sorted_centrality[len(sorted_centrality)-1])
