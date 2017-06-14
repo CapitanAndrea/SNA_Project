@@ -1,4 +1,4 @@
-#update 11/06
+#update 14/06
 
 import urllib2
 import re
@@ -9,6 +9,12 @@ import Queue
 import os
 import operator
 import networkx as nx
+import operator
+
+#problem with encode in page_map risolved
+import sys
+reload(sys)
+sys.setdefaultencoding('utf-8')
 
 #indent a json string to be more human readable
 def beautify(json_string):
@@ -37,10 +43,9 @@ def req_page(page_name,duplicate):
 	try:
 		response=jdata['query']['normalized'][0]['to']
 		if(duplicate==0) :
-			print "IN " + (response).replace(' ', '_')
 			return req_page((response).replace(' ', '_'),1)
 	except BaseException as e:
-		print "OUT "
+		{}
 
 	try:
 		response=jdata['query']['pages']
@@ -128,15 +133,20 @@ while not page_queue.empty():
 		if page_map[j[0]]<6001: out_file_id.write(str(page_map[page_name])+"\t"+str(page_map[j[0]])+"\n")
 	print(str(num))
 	num=num+1
-	if num>10: break
+	if num>6000: break
 out_file.close()
 out_file_id.close()
 
+
+page_map_sorted= sorted(page_map.items(), key=operator.itemgetter(1))
+
 #also write to file the dictionary
 out_file = open("pages/pages","w")
-out_file.write(str(page_map)+'\n')
+for (key,value) in page_map_sorted:
+	out_file.write(str(value) +  ' : ' + str(key) +'\n')
 out_file.close()
 
+#create graph refined (remove nodes with out degree equal to zero)
 g=nx.read_edgelist('graph_id', create_using=nx.DiGraph())
 outdegree_distribution=g.out_degree().items()
 for entry in outdegree_distribution:
