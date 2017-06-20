@@ -2,7 +2,7 @@ import networkx as nx
 import operator
 
 
-g=nx.read_weighted_edgelist('graph6000', create_using=nx.DiGraph())
+g=nx.read_weighted_edgelist('graph_refined', create_using=nx.DiGraph())
 ung=nx.Graph(g)
 print'Graph loaded!111!'
 
