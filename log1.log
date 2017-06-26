@@ -1,0 +1,12 @@
+NETBEGIN 1
+CLUBEGIN 1
+PERBEGIN 1
+CLSBEGIN 1
+HIEBEGIN 1
+VECBEGIN 1
+
+% Reading Network   ---    Z:\home\capitano\Desktop\sna_project\graph.net
+N 1 RDN "Z:\home\capitano\Desktop\sna_project\graph.net" (404760)
+% Saving network to file   ---    Z:\home\capitano\Desktop\sna_project\asdasdasd.net
+N 1 WN "Z:\home\capitano\Desktop\sna_project\asdasdasd.net" 0 (404760)
+% Reading Network   ---    Z:\home\capitano\Desktop\sna_project\graph.net
