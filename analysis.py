@@ -2,7 +2,7 @@ import networkx as nx
 import operator
 
 
-g=nx.read_weighted_edgelist('graph_refined', create_using=nx.DiGraph())
+g=nx.read_weighted_edgelist('graph_translated', create_using=nx.DiGraph())
 ung=nx.Graph(g)
 print'Graph loaded!111!'
 
@@ -51,12 +51,12 @@ print 'there are ' + str(nx.number_weakly_connected_components(g)) + ' weakly co
 #	print str(len(i))
 	
 #path analysis
-#print 'the diameter is ' + str(nx.diameter(ung))
-#print 'the average shortest path is ' + str(nx.average_shortest_path_length(ung))
+print 'the diameter is ' + str(nx.diameter(ung))
+print 'the average shortest path is ' + str(nx.average_shortest_path_length(ung))
 
 #clustering coefficient, density analysis
-#print 'the density is ' + str(nx.density(g))
-#print 'the average clustering is ' + str(nx.average_clustering(ung))
+print 'the density is ' + str(nx.density(g))
+print 'the average clustering is ' + str(nx.average_clustering(ung))
 
 #centrality analysis
 centrality=nx.betweenness_centrality(g, normalized=True)
